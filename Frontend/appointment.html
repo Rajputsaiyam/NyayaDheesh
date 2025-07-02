@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalConnect | Appointment Booking</title>
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-blue-dark: #2563eb;
+            --accent-blue-light: #60a5fa;
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-tertiary: #94a3b8;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(100, 116, 139, 0.2);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        @supports (font-variation-settings: normal) {
+            * { font-family: 'Inter var', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent-blue);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+        
+        h1 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .subtitle {
+            color: var(--text-tertiary);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .appointment-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .form-section, .details-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+        }
+        
+        .card h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+        
+        .card h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-blue);
+            border-radius: 3px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.875rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        button {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        button:hover {
+            background-color: var(--accent-blue-dark);
+            transform: translateY(-1px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .appointment-details {
+            margin-top: 1rem;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .detail-value {
+            text-align: right;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .zoom-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .zoom-btn {
+            background-color: var(--accent-blue);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .zoom-btn:hover {
+            background-color: var(--accent-blue-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .zoom-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-scheduled {
+            background-color: rgba(37, 99, 235, 0.2);
+            color: var(--accent-blue-light);
+        }
+        
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-cancelled {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--error-color);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        #noAppointment {
+            color: var(--text-tertiary);
+            text-align: center;
+            padding: 2rem 0;
+            font-style: italic;
+        }
+        
+        #zoomMeetingInfo {
+            color: var(--text-tertiary);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        #zoomMeetingId {
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .appointment-container {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LegalConnect</h1>
+            <p class="subtitle">Schedule your consultation with legal experts</p>
+        </header>
+        
+        <div class="appointment-container">
+            <div class="form-section">
+                <div class="card">
+                    <h2>Book Appointment</h2>
+                    <form id="appointmentForm">
+                        <div class="form-group">
+                            <label for="lawyer">Select Lawyer</label>
+                            <select id="lawyer" required>
+                                <option value="">Select a lawyer</option>
+                                <option value="67de8340e1061254f3684dec">Rakesh Kumar - Corporate Law</option>
+                                <option value="68de8341e1061254f3684ded">Sarah Johnson - Family Law</option>
+                                <option value="69de8342e1061254f3684dee">Rahul Dhawan - Criminal Law</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="consultationMode">Consultation Mode</label>
+                            <select id="consultationMode" required>
+                                <option value="">Select mode</option>
+                                <option value="Online" selected>Online (Zoom)</option>
+                                <option value="In-Person">In-Person</option>
+                                <option value="Phone">Phone</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="appointmentDate">Date & Time</label>
+                            <input type="datetime-local" id="appointmentDate" required>
+                        </div>
+                        
+                        <button type="submit" id="submitBtn">
+                            <span id="submitText">Schedule Appointment</span>
+                            <span id="submitSpinner" class="loading hidden"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="details-section">
+                <div class="card">
+                    <h2>Appointment Details</h2>
+                    <div id="noAppointment" class="appointment-details">
+                        <p>No appointment scheduled yet</p>
+                    </div>
+                    
+                    <div id="appointmentDetails" class="appointment-details hidden">
+                        <div class="detail-item">
+                            <span class="detail-label">Lawyer:</span>
+                            <span class="detail-value" id="detailLawyer">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Mode:</span>
+                            <span class="detail-value" id="detailMode">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Date & Time:</span>
+                            <span class="detail-value" id="detailDate">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value"><span id="detailStatus" class="status-badge status-scheduled">Scheduled</span></span>
+                        </div>
+                    </div>
+                    
+                    <div id="zoomSection" class="zoom-section hidden">
+                        <a id="zoomJoinBtn" href="#" class="zoom-btn" target="_blank">
+                            <svg class="zoom-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                                <path fill="currentColor" d="M24 9.5C31.1 9.5 36.5 14.9 36.5 22C36.5 29.1 31.1 34.5 24 34.5C16.9 34.5 11.5 29.1 11.5 22C11.5 14.9 16.9 9.5 24 9.5ZM24 3C12.4 3 3 12.4 3 24C3 35.6 12.4 45 24 45C35.6 45 45 35.6 45 24C45 12.4 35.6 3 24 3ZM24 38.5C18.2 38.5 13.5 33.8 13.5 28C13.5 22.2 18.2 17.5 24 17.5C29.8 17.5 34.5 22.2 34.5 28C34.5 33.8 29.8 38.5 24 38.5Z"/>
+                            </svg>
+                            Join Zoom Meeting
+                        </a>
+                        <p id="zoomMeetingInfo">Meeting ID: <span id="zoomMeetingId"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const appointmentForm = document.getElementById('appointmentForm');
+            const lawyerSelect = document.getElementById('lawyer');
+            const noAppointment = document.getElementById('noAppointment');
+            const appointmentDetails = document.getElementById('appointmentDetails');
+            const zoomSection = document.getElementById('zoomSection');
+            const zoomJoinBtn = document.getElementById('zoomJoinBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitSpinner = document.getElementById('submitSpinner');
+            
+            // Mock lawyer data (in real app, fetch from API)
+            const lawyers = [
+                { _id: "67de8340e1061254f3684dec", name: "Rakesh Kumar", specialization: "Corporate Law" },
+                { _id: "68de8341e1061254f3684ded", name: "Sarah Johnson", specialization: "Family Law" },
+                { _id: "69de8342e1061254f3684dee", name: "Rahul Dhawan", specialization: "Criminal Law" }
+            ];
+            
+            // Initialize form
+            setupEventListeners();
+            
+            // Set up event listeners
+            function setupEventListeners() {
+                appointmentForm.addEventListener('submit', handleFormSubmit);
+            }
+            
+            // Handle form submission
+            async function handleFormSubmit(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const lawyerId = lawyerSelect.value;
+                const consultationMode = document.getElementById('consultationMode').value;
+                const appointmentDate = document.getElementById('appointmentDate').value;
+                
+                // Validate inputs
+                if (!lawyerId || !consultationMode || !appointmentDate) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Show loading state
+                submitText.textContent = 'Scheduling...';
+                submitSpinner.classList.remove('hidden');
+                submitBtn.disabled = true;
+                
+                try {
+                    // Simulate API call delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Create mock appointment
+                    const appointment = {
+                        _id: "appt_" + Math.random().toString(36).substring(2, 15),
+                        lawyer: lawyerId,
+                        consultationMode,
+                        appointmentDate: new Date(appointmentDate).toISOString(),
+                        status: "Scheduled",
+                        zoomJoinUrl: generateZoomLink(lawyerId)
+                    };
+                    
+                    // Update UI
+                    updateAppointmentDetails(appointment);
+                    
+                    // Show success
+                    alert('Appointment scheduled successfully!');
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to schedule. Please try again.');
+                } finally {
+                    submitText.textContent = 'Schedule Appointment';
+                    submitSpinner.classList.add('hidden');
+                    submitBtn.disabled = false;
+                }
+            }
+            
+            // Update appointment details
+            function updateAppointmentDetails(appointment) {
+                const lawyer = lawyers.find(l => l._id === appointment.lawyer);
+                
+                document.getElementById('detailLawyer').textContent = lawyer ? 
+                    `${lawyer.name} (${lawyer.specialization})` : 'Unknown Lawyer';
+                document.getElementById('detailMode').textContent = appointment.consultationMode;
+                document.getElementById('detailDate').textContent = formatDate(appointment.appointmentDate);
+                
+                const statusBadge = document.getElementById('detailStatus');
+                statusBadge.className = 'status-badge status-' + (appointment.status || 'scheduled').toLowerCase();
+                statusBadge.textContent = appointment.status || 'Scheduled';
+                
+                noAppointment.classList.add('hidden');
+                appointmentDetails.classList.remove('hidden');
+                
+                if (appointment.consultationMode === 'Online' && appointment.zoomJoinUrl) {
+                    zoomJoinBtn.href = appointment.zoomJoinUrl;
+                    zoomSection.classList.remove('hidden');
+                    document.getElementById('zoomMeetingId').textContent = extractZoomMeetingId(appointment.zoomJoinUrl);
+                } else {
+                    zoomSection.classList.add('hidden');
+                }
+            }
+            
+            // Helper functions
+            function formatDate(isoString) {
+                const date = new Date(isoString);
+                return date.toLocaleString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            function generateZoomLink(lawyerId) {
+                // In real app, this would come from backend
+                return `https://us04web.zoom.us/j/74541273016?pwd=tT3ezrzLkdFZiqi0o0f4hWIx2qafud.1`;
+            }
+            
+            function extractZoomMeetingId(url) {
+                const match = url.match(/zoom\.us\/j\/([0-9]+)/);
+                return match ? match[1] : 'N/A';
+            }
+        });
+    </script>
+</body>
+</html>
