@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lawyer Dashboard | NyayaDheesh</title>
+  <style>
+    /* Reset & Base Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Navbar Styles */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 5%;
+      background: rgba(18, 18, 18, 0.98);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #D4AF37, #F5D76E);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-decoration: none;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #D4AF37, #F5D76E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #121212;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 64px;
+      width: 240px;
+      height: calc(100vh - 64px);
+      background: #1a1a1a;
+      padding: 20px 0;
+      border-right: 1px solid rgba(212, 175, 55, 0.2);
+      z-index: 90;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 5px;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #b0b0b0;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background: rgba(212, 175, 55, 0.1);
+      color: #F5D76E;
+      border-left: 3px solid #D4AF37;
+    }
+
+    .sidebar-menu i {
+      margin-right: 12px;
+      font-size: 18px;
+      color: #D4AF37;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 240px;
+      margin-top: 64px;
+      padding: 30px;
+      background: #121212;
+      min-height: calc(100vh - 64px);
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .page-title h1 {
+      font-size: 2rem;
+      background: linear-gradient(90deg, #D4AF37, #F5D76E);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .page-title p {
+      color: #888;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+      border-color: rgba(212, 175, 55, 0.5);
+    }
+
+    .stat-card h3 {
+      font-size: 1rem;
+      color: #b0b0b0;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #D4AF37, #F5D76E);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    /* Cases Section */
+    .cases-section {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, #D4AF37, #F5D76E);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .btn {
+      background: linear-gradient(90deg, #D4AF37, #F5D76E);
+      color: #121212;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .cases-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cases-table th {
+      text-align: left;
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      color: #D4AF37;
+      font-weight: 600;
+    }
+
+    .cases-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .cases-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .cases-table tr:hover {
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .case-client {
+      display: flex;
+      align-items: center;
+    }
+
+    .client-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: #D4AF37;
+      font-weight: bold;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .client-name {
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+
+    .case-type {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .case-type.mediation {
+      background: rgba(212, 175, 55, 0.1);
+      color: #F5D76E;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .case-type.contract {
+      background: rgba(52, 152, 219, 0.1);
+      color: #5dade2;
+      border: 1px solid rgba(52, 152, 219, 0.3);
+    }
+
+    .case-type.litigation {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .case-status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .case-status.active {
+      background: rgba(46, 204, 113, 0.1);
+      color: #2ecc71;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .case-status.pending {
+      background: rgba(241, 196, 15, 0.1);
+      color: #f1c40f;
+      border: 1px solid rgba(241, 196, 15, 0.3);
+    }
+
+    .case-status.closed {
+      background: rgba(149, 165, 166, 0.1);
+      color: #95a5a6;
+      border: 1px solid rgba(149, 165, 166, 0.3);
+    }
+
+    .case-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: #D4AF37;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .action-btn:hover {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: rgba(212, 175, 55, 0.5);
+    }
+
+    /* Calendar Section */
+    .calendar-section {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .calendar-nav-btn {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #D4AF37;
+      transition: all 0.3s;
+    }
+
+    .calendar-nav-btn:hover {
+      background: rgba(212, 175, 55, 0.2);
+    }
+
+    .calendar-title {
+      font-weight: 600;
+      color: #D4AF37;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .calendar-day-header {
+      text-align: center;
+      font-weight: 600;
+      color: #D4AF37;
+      padding: 5px;
+      font-size: 0.9rem;
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 5px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      color: #b0b0b0;
+    }
+
+    .calendar-day:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .calendar-day.today {
+      background: rgba(212, 175, 55, 0.2);
+      font-weight: bold;
+      color: #F5D76E;
+    }
+
+    .calendar-day.other-month {
+      color: #555;
+    }
+
+    .calendar-event {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #D4AF37;
+      margin-top: 2px;
+    }
+
+    /* Two Column Layout */
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 200px;
+      }
+      .main-content {
+        margin-left: 200px;
+      }
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+
+
+
+
+    /* AI Review Section Styles */
+    .ai-review-section {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(65, 131, 215, 0.3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .ai-review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .ai-review-header h2 {
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, #4183D7, #59ABE3);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .ai-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(65, 131, 215, 0.3);
+      margin-bottom: 20px;
+    }
+
+    .ai-tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      color: #b0b0b0;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .ai-tab.active {
+      color: #59ABE3;
+      border-bottom: 3px solid #4183D7;
+    }
+
+    .ai-tab:hover:not(.active) {
+      color: #e0e0e0;
+    }
+
+    .ai-review-content {
+      display: none;
+    }
+
+    .ai-review-content.active {
+      display: block;
+    }
+
+    .ai-case {
+      background: #252525;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 3px solid #4183D7;
+    }
+
+    .ai-case-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .ai-case-title {
+      font-weight: 600;
+      color: #e0e0e0;
+    }
+
+    .ai-case-meta {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .ai-case-details {
+      margin-bottom: 15px;
+      color: #b0b0b0;
+      line-height: 1.5;
+    }
+
+    .ai-prediction {
+      background: rgba(65, 131, 215, 0.1);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(65, 131, 215, 0.3);
+    }
+
+    .ai-prediction-title {
+      font-weight: 600;
+      color: #59ABE3;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .ai-prediction-title i {
+      margin-right: 8px;
+    }
+
+    .ai-prediction-text {
+      color: #b0b0b0;
+      line-height: 1.5;
+    }
+
+    .ai-confidence {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 0.8rem;
+    }
+
+    .confidence-bar {
+      flex-grow: 1;
+      height: 6px;
+      background: #333;
+      border-radius: 3px;
+      margin: 0 10px;
+      overflow: hidden;
+    }
+
+    .confidence-level {
+      height: 100%;
+      background: linear-gradient(90deg, #4183D7, #59ABE3);
+      width: 75%; /* This would be dynamic in a real app */
+    }
+
+    .ai-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .ai-btn {
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+    }
+
+    .ai-btn-approve {
+      background: rgba(46, 204, 113, 0.1);
+      color: #2ecc71;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .ai-btn-approve:hover {
+      background: rgba(46, 204, 113, 0.2);
+    }
+
+    .ai-btn-reject {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .ai-btn-reject:hover {
+      background: rgba(231, 76, 60, 0.2);
+    }
+
+    .ai-btn-feedback {
+      background: rgba(241, 196, 15, 0.1);
+      color: #f1c40f;
+      border: 1px solid rgba(241, 196, 15, 0.3);
+    }
+
+    .ai-btn-feedback:hover {
+      background: rgba(241, 196, 15, 0.2);
+    }
+
+    .ai-discussion {
+      margin-top: 20px;
+      border-top: 1px solid rgba(65, 131, 215, 0.3);
+      padding-top: 20px;
+    }
+
+    .ai-discussion-title {
+      font-weight: 600;
+      color: #59ABE3;
+      margin-bottom: 15px;
+    }
+
+    .ai-comment {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .ai-comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(65, 131, 215, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: #59ABE3;
+      font-weight: bold;
+      font-size: 0.8rem;
+      border: 1px solid rgba(65, 131, 215, 0.3);
+    }
+
+    .ai-comment-content {
+      flex-grow: 1;
+    }
+
+    .ai-comment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .ai-comment-author {
+      font-weight: 600;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+    }
+
+    .ai-comment-time {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .ai-comment-text {
+      color: #b0b0b0;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .ai-comment-form {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    .ai-comment-input {
+      flex-grow: 1;
+      background: #252525;
+      border: 1px solid rgba(65, 131, 215, 0.3);
+      border-radius: 20px;
+      padding: 10px 15px;
+      color: #e0e0e0;
+      font-family: inherit;
+      resize: none;
+      height: 40px;
+      transition: all 0.3s;
+    }
+
+    .ai-comment-input:focus {
+      outline: none;
+      border-color: #59ABE3;
+      height: 80px;
+    }
+
+    .ai-comment-submit {
+      background: #4183D7;
+      color: #121212;
+      border: none;
+      border-radius: 20px;
+      padding: 0 20px;
+      margin-left: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .ai-comment-submit:hover {
+      background: #59ABE3;
+    }
+
+    /* Add to sidebar menu */
+    .sidebar-menu li:nth-child(5) {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .sidebar-menu li:nth-child(5)::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: rgba(212, 175, 55, 0.2);
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">NyayaDheesh</div>
+    <div class="user-menu">
+      <div class="user-avatar">AS</div>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div style="padding: 20px; border-bottom: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 15px;">
+      <div style="font-weight: 600; color: #D4AF37; margin-bottom: 5px;">Adv. Ananya Sharma</div>
+      <div style="font-size: 0.9rem; color: #888;">Mediation Specialist</div>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="#"><i class="fas fa-briefcase"></i> My Cases</a></li>
+      <li><a href="#"><i class="fas fa-calendar-alt"></i> Schedule</a></li>
+      <li><a href="#"><i class="fas fa-file-contract"></i> Documents</a></li>
+      <li><a href="#"><i class="fas fa-chart-line"></i> Performance</a></li>
+      <li><a href="#"><i class="fas fa-wallet"></i> Earnings</a></li>
+      <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="page-header">
+      <div class="page-title">
+        <h1>Advocate Dashboard</h1>
+        <p>Welcome back to your legal practice management hub</p>
+      </div>
+      <button class="btn"><i class="fas fa-plus"></i> New Case</button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Active Cases</h3>
+        <div class="value">18</div>
+      </div>
+      <div class="stat-card">
+        <h3>Upcoming Hearings</h3>
+        <div class="value">5</div>
+      </div>
+      <div class="stat-card">
+        <h3>Mediation Sessions</h3>
+        <div class="value">7</div>
+      </div>
+      <div class="stat-card">
+        <h3>Client Rating</h3>
+        <div class="value">4.8/5</div>
+      </div>
+    </div>
+
+
+    <!-- Two Column Layout -->
+    <div class="two-column">
+      <!-- Active Cases -->
+      <div class="cases-section">
+        <div class="section-header">
+          <h2>Active Cases</h2>
+          <a href="#" style="color: #D4AF37; text-decoration: none;">View All</a>
+        </div>
+        <table class="cases-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="case-client">
+                  <div class="client-avatar">SR</div>
+                  <div class="client-name">Saiyam Rajput</div>
+                </div>
+              </td>
+              <td><span class="case-type mediation">Mediation</span></td>
+              <td><span class="case-status active">Active</span></td>
+              <td>
+                <div class="case-actions">
+                  <button class="action-btn"><i class="fas fa-eye"></i></button>
+                  <button class="action-btn"><i class="fas fa-comment-alt"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="case-client">
+                  <div class="client-avatar">PM</div>
+                  <div class="client-name">Priya Malhotra</div>
+                </div>
+              </td>
+              <td><span class="case-type contract">Contract</span></td>
+              <td><span class="case-status pending">Review</span></td>
+              <td>
+                <div class="case-actions">
+                  <button class="action-btn"><i class="fas fa-eye"></i></button>
+                  <button class="action-btn"><i class="fas fa-comment-alt"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="case-client">
+                  <div class="client-avatar">SG</div>
+                  <div class="client-name">Sanjay Gupta</div>
+                </div>
+              </td>
+              <td><span class="case-type litigation">Litigation</span></td>
+              <td><span class="case-status active">Active</span></td>
+              <td>
+                <div class="case-actions">
+                  <button class="action-btn"><i class="fas fa-eye"></i></button>
+                  <button class="action-btn"><i class="fas fa-comment-alt"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="case-client">
+                  <div class="client-avatar">AD</div>
+                  <div class="client-name">Ananya Desai</div>
+                </div>
+              </td>
+              <td><span class="case-type mediation">Mediation</span></td>
+              <td><span class="case-status pending">Scheduled</span></td>
+              <td>
+                <div class="case-actions">
+                  <button class="action-btn"><i class="fas fa-eye"></i></button>
+                  <button class="action-btn"><i class="fas fa-comment-alt"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Calendar Section -->
+      <div class="calendar-section">
+        <div class="section-header">
+          <h2>Upcoming Schedule</h2>
+          <div class="calendar-header">
+            <div class="calendar-nav">
+              <button class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
+              <button class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="calendar-title">June 2023</div>
+          </div>
+        </div>
+        <div class="calendar-grid">
+          <div class="calendar-day-header">Sun</div>
+          <div class="calendar-day-header">Mon</div>
+          <div class="calendar-day-header">Tue</div>
+          <div class="calendar-day-header">Wed</div>
+          <div class="calendar-day-header">Thu</div>
+          <div class="calendar-day-header">Fri</div>
+          <div class="calendar-day-header">Sat</div>
+          
+          <!-- Calendar days would be generated dynamically in a real app -->
+          <div class="calendar-day other-month">28</div>
+          <div class="calendar-day other-month">29</div>
+          <div class="calendar-day other-month">30</div>
+          <div class="calendar-day other-month">31</div>
+          <div class="calendar-day">1</div>
+          <div class="calendar-day">2</div>
+          <div class="calendar-day">3</div>
+          
+          <div class="calendar-day">4</div>
+          <div class="calendar-day">5</div>
+          <div class="calendar-day">6</div>
+          <div class="calendar-day">7</div>
+          <div class="calendar-day">8</div>
+          <div class="calendar-day">9</div>
+          <div class="calendar-day">10</div>
+          
+          <div class="calendar-day">11</div>
+          <div class="calendar-day">12</div>
+          <div class="calendar-day">13</div>
+          <div class="calendar-day">14</div>
+          <div class="calendar-day today">15<div class="calendar-event"></div></div>
+          <div class="calendar-day">16<div class="calendar-event"></div></div>
+          <div class="calendar-day">17</div>
+          
+          <div class="calendar-day">18</div>
+          <div class="calendar-day">19<div class="calendar-event"></div></div>
+          <div class="calendar-day">20</div>
+          <div class="calendar-day">21</div>
+          <div class="calendar-day">22</div>
+          <div class="calendar-day">23</div>
+          <div class="calendar-day">24</div>
+          
+          <div class="calendar-day">25</div>
+          <div class="calendar-day">26</div>
+          <div class="calendar-day">27</div>
+          <div class="calendar-day">28</div>
+          <div class="calendar-day">29</div>
+          <div class="calendar-day">30</div>
+          <div class="calendar-day other-month">1</div>
+        </div>
+        
+        <!-- Upcoming Events List -->
+        <div style="margin-top: 20px;">
+          <h3 style="font-size: 1.1rem; color: #D4AF37; margin-bottom: 15px;">Today's Appointments</h3>
+          <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
+            <div style="width: 10px; height: 10px; border-radius: 50%; background: #D4AF37; margin-right: 10px;"></div>
+            <div>
+              <div style="font-weight: 500; color: #e0e0e0;">Mediation Session</div>
+              <div style="font-size: 0.9rem; color: #888;">10:30 AM - Kapoor vs. Sharma</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
+            <div style="width: 10px; height: 10px; border-radius: 50%; background: #3498db; margin-right: 10px;"></div>
+            <div>
+              <div style="font-weight: 500; color: #e0e0e0;">Client Consultation</div>
+              <div style="font-size: 0.9rem; color: #888;">2:00 PM - New Client</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="ai-review-section">
+      <div class="ai-review-header">
+        <h2>AI Model Review</h2>
+        <div>
+          <span style="color: #888; margin-right: 15px;">Your Contribution: 42 reviews</span>
+          <span style="color: #59ABE3; font-weight: 500;"><i class="fas fa-medal" style="margin-right: 5px;"></i>Expert Reviewer</span>
+        </div>
+      </div>
+      
+      <div class="ai-tabs" style="padding: 20px; margin-top: 10px;">
+        <div class="ai-tab active" data-tab="pending">Pending Review</div>
+        <div class="ai-tab" data-tab="reviewed">Your Reviews</div>
+        <div class="ai-tab" data-tab="discussions">Community Discussions</div>
+      </div>
+      
+      <!-- Pending Review Tab -->
+      <div class="ai-review-content active" id="pending-tab">
+        <div class="ai-case">
+          <div class="ai-case-header">
+            <div class="ai-case-title">Property Dispute - Sharma vs. Patel</div>
+            <div class="ai-case-meta">Case #JD-2023-1456 | Added 2 days ago</div>
+          </div>
+          <div class="ai-case-details">
+            Dispute over partition of ancestral property in Mumbai. Plaintiff claims 50% share based on inheritance rights, while defendant argues plaintiff relinquished rights in 2015 family settlement.
+          </div>
+          <div class="ai-prediction">
+            <div class="ai-prediction-title">
+              <i class="fas fa-brain"></i> AI Prediction
+            </div>
+            <div class="ai-prediction-text">
+              Based on similar cases and documents provided, the AI predicts a 65-70% likelihood of the court ruling in favor of the plaintiff for a 30-35% share of the property, citing partial validity of the 2015 settlement but accounting for subsequent changes in property laws.
+            </div>
+            <div class="ai-confidence">
+              <span>Confidence:</span>
+              <div class="confidence-bar">
+                <div class="confidence-level" style="width: 75%;"></div>
+              </div>
+              <span>75%</span>
+            </div>
+          </div>
+          <div class="ai-actions">
+            <button class="ai-btn ai-btn-approve"><i class="fas fa-check-circle"></i> Approve Prediction</button>
+            <button class="ai-btn ai-btn-reject"><i class="fas fa-times-circle"></i> Reject Prediction</button>
+            <button class="ai-btn ai-btn-feedback"><i class="fas fa-edit"></i> Provide Feedback</button>
+          </div>
+        </div>
+        
+        <div class="ai-case">
+          <div class="ai-case-header">
+            <div class="ai-case-title">Employment Contract Dispute</div>
+            <div class="ai-case-meta">Case #JD-2023-1892 | Added 1 day ago</div>
+          </div>
+          <div class="ai-case-details">
+            Former employee claims wrongful termination and seeks 6 months salary as compensation. Employer argues termination was for cause due to repeated performance issues documented over 8 months.
+          </div>
+          <div class="ai-prediction">
+            <div class="ai-prediction-title">
+              <i class="fas fa-brain"></i> AI Prediction
+            </div>
+            <div class="ai-prediction-text">
+              The AI suggests an 85% probability that the labor court will award 2-3 months salary as compensation, noting that while documentation exists, the employer failed to follow proper progressive discipline procedures in 2 instances.
+            </div>
+            <div class="ai-confidence">
+              <span>Confidence:</span>
+              <div class="confidence-bar">
+                <div class="confidence-level" style="width: 85%;"></div>
+              </div>
+              <span>85%</span>
+            </div>
+          </div>
+          <div class="ai-actions">
+            <button class="ai-btn ai-btn-approve"><i class="fas fa-check-circle"></i> Approve Prediction</button>
+            <button class="ai-btn ai-btn-reject"><i class="fas fa-times-circle"></i> Reject Prediction</button>
+            <button class="ai-btn ai-btn-feedback"><i class="fas fa-edit"></i> Provide Feedback</button>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="btn" style="background: #4183D7; color: white;"><i class="fas fa-sync-alt"></i> Load More Cases</button>
+        </div>
+      </div>
+      
+      <!-- Reviewed Tab -->
+      <div class="ai-review-content" id="reviewed-tab">
+        <div class="ai-case">
+          <div class="ai-case-header">
+            <div class="ai-case-title">Commercial Lease Dispute</div>
+            <div class="ai-case-meta">Reviewed 3 days ago | Your rating: <span style="color: #2ecc71;">Approved</span></div>
+          </div>
+          <div class="ai-prediction">
+            <div class="ai-prediction-title">
+              <i class="fas fa-brain"></i> AI Prediction
+            </div>
+            <div class="ai-prediction-text">
+              Predicted 70% chance landlord would prevail in eviction case due to non-payment during COVID moratorium period.
+            </div>
+          </div>
+          <div class="ai-case-details">
+            <strong>Your Feedback:</strong> "The prediction correctly accounts for the specific state-level COVID protections that were in place during the disputed period. However, it underestimates (by ~15%) the tenant's counterclaim for property maintenance issues which could offset some of the back rent."
+          </div>
+          <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
+            <i class="fas fa-lightbulb" style="color: #f1c40f;"></i> Your feedback was incorporated into the model and improved its accuracy for similar commercial lease cases by 8%.
+          </div>
+        </div>
+        
+        <div class="ai-case">
+          <div class="ai-case-header">
+            <div class="ai-case-title">Divorce Settlement - Alimony Calculation</div>
+            <div class="ai-case-meta">Reviewed 1 week ago | Your rating: <span style="color: #e74c3c;">Rejected</span></div>
+          </div>
+          <div class="ai-prediction">
+            <div class="ai-prediction-title">
+              <i class="fas fa-brain"></i> AI Prediction
+            </div>
+            <div class="ai-prediction-text">
+              Estimated ₹42,000/month alimony based on husband's IT returns from past 3 years.
+            </div>
+          </div>
+          <div class="ai-case-details">
+            <strong>Your Feedback:</strong> "The model failed to account for the husband's recently started consulting business which doubles his actual income. It also didn't factor in the wife's part-time earnings. A more accurate range would be ₹65,000-₹72,000/month."
+          </div>
+          <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
+            <i class="fas fa-lightbulb" style="color: #f1c40f;"></i> Your rejection triggered a review of the income assessment module which was subsequently updated.
+          </div>
+        </div>
+      </div>
+      
+      <!-- Discussions Tab -->
+      <div class="ai-review-content" id="discussions-tab">
+        <div class="ai-discussion">
+          <div class="ai-discussion-title">
+            <i class="fas fa-comments"></i> Community Discussions
+          </div>
+          
+          <div class="ai-comment">
+            <div class="ai-comment-avatar">VP</div>
+            <div class="ai-comment-content">
+              <div class="ai-comment-header">
+                <div class="ai-comment-author">Adv. Vikram Patel</div>
+                <div class="ai-comment-time">2 hours ago</div>
+              </div>
+              <div class="ai-comment-text">
+                Has anyone noticed the AI seems to undervalue emotional distress claims in workplace harassment cases? I've reviewed 3 cases this week where it suggested amounts 30-40% lower than what we've actually been able to secure in similar situations.
+              </div>
+            </div>
+          </div>
+          
+          <div class="ai-comment">
+            <div class="ai-comment-avatar">RM</div>
+            <div class="ai-comment-content">
+              <div class="ai-comment-header">
+                <div class="ai-comment-author">Adv. Ritu Mehra</div>
+                <div class="ai-comment-time">1 hour ago</div>
+              </div>
+              <div class="ai-comment-text">
+                @Vikram I've seen the same pattern. I think it's because the model weights older cases too heavily before the 2021 Vishaka guidelines expansion. I've been adding this in my feedback consistently.
+              </div>
+            </div>
+          </div>
+          
+          <div class="ai-comment">
+            <div class="ai-comment-avatar">AS</div>
+            <div class="ai-comment-content">
+              <div class="ai-comment-header">
+                <div class="ai-comment-author">You</div>
+                <div class="ai-comment-time">45 minutes ago</div>
+              </div>
+              <div class="ai-comment-text">
+                Good observation Vikram. I've found that if you manually input the Vishaka guidelines as a secondary reference in the documents section, the predictions improve by about 15-20%. Not ideal, but a workaround until they update the model.
+              </div>
+            </div>
+          </div>
+          
+          <div class="ai-comment-form">
+            <textarea class="ai-comment-input" placeholder="Add to the discussion..."></textarea>
+            <button class="ai-comment-submit">Post</button>
+          </div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+          <div class="ai-discussion-title">
+            <i class="fas fa-star"></i> Featured Discussion: Model Accuracy in IP Cases
+          </div>
+          <div style="background: #252525; border-radius: 8px; padding: 15px; margin-top: 10px;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(65, 131, 215, 0.1); display: flex; align-items: center; justify-content: center; margin-right: 12px; color: #59ABE3; border: 1px solid rgba(65, 131, 215, 0.3);">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div>
+                <div style="font-weight: 600; color: #e0e0e0;">NyayaDheesh AI Team</div>
+                <div style="font-size: 0.8rem; color: #888;">Posted 5 days ago</div>
+              </div>
+            </div>
+            <div style="color: #b0b0b0; line-height: 1.5; margin-bottom: 15px;">
+              We're analyzing the model's performance in intellectual property cases, particularly around trademark disputes. Early data shows lower accuracy (68%) compared to other civil matters (82%). If you've reviewed IP cases, please share your observations on specific areas where the predictions diverge from actual outcomes.
+            </div>
+            <div style="font-size: 0.9rem; color: #59ABE3;">
+              <i class="fas fa-comment" style="margin-right: 5px;"></i> 14 comments
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Lawyer dashboard loaded');
+      
+      // In a real implementation, you would add:
+      // - Calendar navigation functionality
+      // - Case management interactions
+      // - Data loading from API
+      // - Responsive menu toggle for mobile
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Lawyer dashboard loaded');
+      
+      // Tab switching functionality for AI Review section
+      const tabs = document.querySelectorAll('.ai-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs and content
+          document.querySelectorAll('.ai-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.ai-review-content').forEach(c => c.classList.remove('active'));
+          
+          // Add active class to clicked tab and corresponding content
+          tab.classList.add('active');
+          const tabId = tab.getAttribute('data-tab') + '-tab';
+          document.getElementById(tabId).classList.add('active');
+        });
+      });
+      
+      // In a real implementation, you would also add:
+      // - Case review submission handling
+      // - Comment posting functionality
+      // - Data loading for different tabs
+      // - Pagination for review items
+    });
+
+  </script>
+</body>
+</html>
